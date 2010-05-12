@@ -1,0 +1,81 @@
+<html>
+<head>
+    <title>Barber</title>
+    <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="mustache.js?3" type="text/javascript"></script>
+
+    <style type="text/css" media="screen">
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			#toolbar {
+				z-index: 100;
+				position: absolute;
+				height: 30px;
+				width: 100px;
+				top: 0;
+				right: 0;
+				background-color: gray;
+			}
+			#preview {
+				width: 99.9%;
+				height: 99.9%;
+			}
+    </style>
+</head>
+<body>
+	<div id="toolbar">
+		<a href="#" id="switch_preview">Preview</a>
+		<a href="#" id="switch_edit">Edit</a>		
+	</div>
+	<div id="preview_pane">
+		<iframe id="preview" name="preview"></iframe>		
+	</div>
+	<div id="edit_pane">
+			<p>
+				<label>Template</label><br/>
+				<textarea name="template" id="template" rows="3" cols="80"></textarea>
+			</p>
+
+			<p>
+				<label>View</label><br/>
+				<textarea name="view" id="view" rows="3" cols="80">{}</textarea>
+			</p>
+			<p>
+				<input type="button" value="Update" id="update">
+			</p>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#preview_pane').hide();
+			$('#edit_pane').show();
+			
+			function reloadPreview() {
+				var template = $('#template').val();
+				var view = JSON.parse($('#view').val());
+				$('iframe')[0].contentDocument.close();
+				$('iframe')[0].contentDocument.write(Mustache.to_html(template, view));
+				$('iframe')[0].contentDocument.close();
+			}
+
+			$('#switch_preview').click(function () {
+				$('#edit_pane').hide();
+				reloadPreview();
+				$('#preview_pane').show();
+			});
+
+			$('#switch_edit').click(function () {
+				$('#preview_pane').hide();
+				$('#edit_pane').show();
+			});
+
+			$('#update').click(function () {
+				$('#edit_pane').hide();
+				reloadPreview();
+				$('#preview_pane').show();
+			});
+		})
+	</script>	
+	
+</body>
